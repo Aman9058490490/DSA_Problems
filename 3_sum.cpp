@@ -1,22 +1,36 @@
 #include<bits/stdc++.h>
 using namespace std;
 vector<vector<int>> threeSum(vector<int>& nums) {
-        sort(nums.begin(),nums.end());
-        set<vector<int>> val;
-        vector<vector<int>> value;
-        for(int i=0;i<nums.size();i++){
-            for(int j=i+1;j<nums.size();j++){
-                for(int k=j+1;k<nums.size();k++){
-                    if(nums[i]+nums[j]+nums[k]==0){
-                         val.insert({nums[i],nums[j],nums[k]});
-                    }
-                }           
+    sort(nums.begin(), nums.end());  // O(n log n)
+    vector<vector<int>> result;
+
+    for (int i = 0; i < nums.size() - 2; i++) {
+        // Skip duplicates for 'i'
+        if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+        int left = i + 1, right = nums.size() - 1;
+
+        while (left < right) {
+            int sum = nums[i] + nums[left] + nums[right];
+
+            if (sum == 0) {
+                result.push_back({nums[i], nums[left], nums[right]});
+                
+                // Skip duplicates for 'left' and 'right'
+                while (left < right && nums[left] == nums[left + 1]) left++;
+                while (left < right && nums[right] == nums[right - 1]) right--;
+
+                left++;
+                right--;
+            } else if (sum < 0) {
+                left++;  // Increase sum by moving left pointer to the right
+            } else {
+                right--; // Decrease sum by moving right pointer to the left
             }
-        }  
-        for(auto itr: val){
-            value.push_back({itr});
         }
-        return value;     
+    }
+
+    return result;
 }
 int main(){
     vector<int> nums;
